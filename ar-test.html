@@ -28,25 +28,22 @@
       timeline: false
     });
 
-    // 2. PASTE YOUR GOOGLE API KEY HERE
-    const GOOGLE_API_KEY = 'YOUR_API_KEY_HERE';
-
     try {
-      // 3. Load the Google Map Tiles API (Photorealistic 3D Streetscape Geometry)
+      // 2. Load the Google Map Tiles API (Photorealistic 3D Streetscape Geometry)
+      // PASTE YOUR API KEY ON THE LINE BELOW WHERE IT SAYS "PASTE_YOUR_ACTUAL_API_KEY_HERE"
       const tileset = viewer.scene.primitives.add(
         new Cesium.Cesium3DTileset({
-          url: `https://tile.googleapis.com/v1/3dtiles/root.json?key=${AIzaSyAwt6tq8uCvBsUXUmHCT8iWDtlBMWV0eu0}`,
+          url: 'https://tile.googleapis.com/v1/3dtiles/root.json?key=AIzaSyAwt6tq8uCvBsUXUmHCT8iWDtlBMWV0eu0',
           showCreditsOnScreen: true,
         })
       );
 
-      // 4. Your Exact Glasgow Cross Coordinates
+      // 3. Your Exact Glasgow Cross Coordinates
       const glasgowLat = 55.85683908;
       const glasgowLng = -4.24441591;
       const glasgowAlt = 11.86973858;
 
-      // 5. Create the "Ghost Scape" Spatial Anchor Placeholder
-      // We are using a semi-transparent red box to represent where your Victorian AI overlay will sit
+      // 4. Create the "Ghost Scape" Spatial Anchor Placeholder
       const ghostAnchor = viewer.entities.add({
         position: Cesium.Cartesian3.fromDegrees(glasgowLng, glasgowLat, glasgowAlt),
         box: {
@@ -58,7 +55,7 @@
         name: 'Victorian AI Overlay Anchor'
       });
 
-      // 6. Automatically fly the camera down into the streets of Glasgow Cross
+      // 5. Automatically fly the camera down into the streets of Glasgow Cross
       viewer.flyTo(ghostAnchor, {
         offset: new Cesium.HeadingPitchRange(
           Cesium.Math.toRadians(0),   // Facing North
