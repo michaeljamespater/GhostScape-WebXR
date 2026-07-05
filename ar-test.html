@@ -1,53 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ghost Scape - WebXR Test</title>
-    
-    <!-- Import the Google model-viewer library -->
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
-    
-    <style>
-        body { margin: 0; padding: 0; background-color: #222; }
-        /* Make the viewer take up the whole screen */
-        model-viewer { width: 100vw; height: 100vh; }
-        
-        /* Style the AR button */
-        .ar-btn {
-            position: absolute; 
-            bottom: 30px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            padding: 15px 24px; 
-            font-size: 18px; 
-            font-family: sans-serif;
-            border-radius: 8px; 
-            border: none; 
-            background: #ffffff; 
-            color: #000000;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            cursor: pointer;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghost Scape - Glasgow Cross 3D Anchor</title>
+  
+  <!-- Import the CesiumJS library for 3D Geospatial rendering -->
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.105/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.105/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  
+  <style>
+    body { margin: 0; padding: 0; overflow: hidden; background-color: #000; }
+    #cesiumContainer { width: 100vw; height: 100vh; }
+  </style>
 </head>
 <body>
+  
+  <div id="cesiumContainer"></div>
 
-    <!-- The WebXR Scene -->
-    <model-viewer 
-        src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
-        ar 
-        ar-modes="webxr scene-viewer quick-look" 
-        camera-controls 
-        auto-rotate 
-        alt="A 3D test model for Ghost Scape">
-        
-        <!-- The button that triggers the AR camera -->
-        <button slot="ar-button" class="ar-btn">
-            Enter Ghost Scape AR
-        </button>
-        
-    </model-viewer>
+  <script>
+    // 1. Initialize the 3D World
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      terrainProvider: new Cesium.createWorldTerrain(),
+      baseLayerPicker: false,
+      geocoder: false,
+      animation: false,
+      timeline: false
+    });
 
+    // 2. PASTE YOUR GOOGLE API KEY HERE
+    const GOOGLE_API_KEY = 'YOUR_API_KEY_HERE';
+
+    try {
+      // 3. Load the Google Map Tiles API (Photorealistic 3D Streetscape Geometry)
+      const tileset = viewer.scene.primitives.add(
+        new Cesium.Cesium3DTileset({
+          url: `https://tile.googleapis.com/v1/3dtiles/root.json?key=AIzaSyCLu_6-mnwa_f0K0PL8p_0RekvAA-uBAZw`,
+          showCreditsOnScreen: true,
+        })
+      );
+
+      // 4. Your Exact Glasgow Cross Coordinates
+      const glasgowLat = 55.85683908;
+      const glasgowLng = -4.24441591;
+      const glasgowAlt = 11.86973858;
+
+      // 5. Create the "Ghost Scape" Spatial Anchor Placeholder
+      // We are using a semi-transparent red box to represent where your Victorian AI overlay will sit
+      const ghostAnchor = viewer.entities.add({
+        position: Cesium.Cartesian3.fromDegrees(glasgowLng, glasgowLat, glasgowAlt),
+        box: {
+          dimensions: new Cesium.Cartesian3(15.0, 15.0, 15.0), // 15x15x15 meters
+          material: Cesium.Color.RED.withAlpha(0.5),
+          outline: true,
+          outlineColor: Cesium.Color.BLACK
+        },
+        name: 'Victorian AI Overlay Anchor'
+      });
+
+      // 6. Automatically fly the camera down into the streets of Glasgow Cross
+      viewer.flyTo(ghostAnchor, {
+        offset: new Cesium.HeadingPitchRange(
+          Cesium.Math.toRadians(0),   // Facing North
+          Cesium.Math.toRadians(-20), // Looking slightly down
+          80                          // Distance from the anchor in meters
+        )
+      });
+
+    } catch (error) {
+      console.error("Error loading 3D Map Tiles: ", error);
+    }
+  </script>
 </body>
 </html>
