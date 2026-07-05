@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Scape - WebXR Test</title>
+    
+    <!-- Import the Google model-viewer library -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    <style>
+        body { margin: 0; padding: 0; background-color: #222; }
+        /* Make the viewer take up the whole screen */
+        model-viewer { width: 100vw; height: 100vh; }
+        
+        /* Style the AR button */
+        .ar-btn {
+            position: absolute; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            padding: 15px 24px; 
+            font-size: 18px; 
+            font-family: sans-serif;
+            border-radius: 8px; 
+            border: none; 
+            background: #ffffff; 
+            color: #000000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- The WebXR Scene -->
+    <model-viewer 
+        src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
+        ar 
+        ar-modes="webxr scene-viewer quick-look" 
+        camera-controls 
+        auto-rotate 
+        alt="A 3D test model for Ghost Scape">
+        
+        <!-- The button that triggers the AR camera -->
+        <button slot="ar-button" class="ar-btn">
+            Enter Ghost Scape AR
+        </button>
+        
+    </model-viewer>
+
+</body>
+</html>
